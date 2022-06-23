@@ -1,0 +1,23 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+before_install:
+  - docker build -t trinhno/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true trinhno/react-test npm test
+
+after_success:
+  - docker build -t trinhno/complex-client ./client
+  - docker build -t trinhno/complex-server ./server
+  - docker build -t trinhno/complex-worker ./worker
+  - docker build -t trinhno/complex-nginx ./nginx
+  # Login to Docker Hub
+  - echo $DOCKER_PASSWORD | docker login -u trinhno --password-stdin
+  # Push images to Docker Hub
+  - docker push trinhno/complex-client
+  - docker push trinhno/complex-server
+  - docker push trinhno/complex-worker
+  - docker push trinhno/complex-nginx 

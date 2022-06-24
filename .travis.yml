@@ -21,3 +21,15 @@ after_success:
   - docker push trinhno/complex-server
   - docker push trinhno/complex-worker
   - docker push trinhno/complex-nginx 
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'ap-southeast-1'
+  app: 'complex-docker'
+  env: 'Complexdocker-env'
+  bucket_name: 'elasticbeanstalk-ap-southeast-1-285763974571'
+  bucket_path: 'complex-docker'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
